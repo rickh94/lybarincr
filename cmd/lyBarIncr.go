@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -60,11 +61,14 @@ func IncrementBarNum(line string, increment int64) string {
 // Function assembleFile takes the lines from a file, the increment, and line number range,
 // increments the appropriate lines, and then returns the new file bytes
 func AssembleFile(lines []string, increment int64, firstLine int, lastLine int) ([]byte, error) {
-	if firstLine < 1 {
-		return nil, fmt.Errorf("Error: First line must be greater than 1.")
+	if firstLine < 1 || lastLine < 1 {
+		return nil, fmt.Errorf("Error: Line numbers must be greater than 1.")
 	}
 	if lastLine > len(lines) {
 		return nil, fmt.Errorf("Error: Last line (%d) is beyond end of file. (%d)", lastLine, len(lines))
+	}
+	if lastLine < firstLine {
+		return nil, fmt.Errorf("Error: Last line must be after first line")
 	}
 	var newLines []string
 	for i, line := range lines {
@@ -77,4 +81,41 @@ func AssembleFile(lines []string, increment int64, firstLine int, lastLine int) 
 	}
 	newLinesStream := strings.Join(newLines, "\n")
 	return []byte(newLinesStream), nil
+}
+
+// Function ProcessFile does all the handling of arguments and writing out the final file
+func ProcessFile(increment int64, decrement bool, firstLine int, lastLine int, dryRun bool, outFile string, args []string) {
+	// switch to decrementing if needed
+	if decrement {
+		increment = -increment
+	}
+	inFile := args[0]
+	lines, err := ReadLilypondFile(inFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// make sure the whole file is done if not specified
+	if lastLine < 0 {
+		lastLine = len(lines)
+	}
+	newContent, err := AssembleFile(lines, increment, firstLine, lastLine)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if dryRun {
+		fmt.Printf("%s", newContent)
+	} else {
+		if outFile == "" {
+			outFile = inFile
+		}
+		info, err := os.Stat(inFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = ioutil.WriteFile(outFile, newContent, info.Mode())
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("%s has been written. Original is available at %s.bak\n", outFile, inFile)
+	}
 }

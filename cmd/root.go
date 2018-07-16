@@ -5,8 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/spf13/cobra"
-	"io/ioutil"
-	"log"
 	"os"
 )
 
@@ -31,56 +29,24 @@ up the original file`,
 	},
 
 	Run: func(cmd *cobra.Command, args []string) {
-		// switch to decrementing if needed
-		if decrement {
-			increment = -increment
-		}
-		inFile := args[0]
-		lines, err := ReadLilypondFile(inFile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		// make sure the whole file is done if not specified
-		if lastLine < 0 {
-			lastLine = len(lines)
-		}
-		newContent, err := AssembleFile(lines, increment, firstLine, lastLine)
-		if err != nil {
-			log.Fatal(err)
-		}
-		if dryRun {
-			fmt.Printf("%s", newContent)
-		} else {
-			if outFile == "" {
-				outFile = inFile
-			}
-			info, err := os.Stat(inFile)
-			if err != nil {
-				log.Fatal(err)
-			}
-			err = ioutil.WriteFile(outFile, newContent, info.Mode())
-			if err != nil {
-				log.Fatal(err)
-			}
-			fmt.Printf("%s has been written. Original is available at %s.bak\n", outFile, inFile)
-		}
+		ProcessFile(incrementOpt, decrementOpt, firstLineOpt, lastLineOpt, dryRunOpt, outFileOpt, args)
 	},
 }
 
-var increment int64
-var decrement bool
-var firstLine int
-var lastLine int
-var dryRun bool
-var outFile string
+var incrementOpt int64
+var decrementOpt bool
+var firstLineOpt int
+var lastLineOpt int
+var dryRunOpt bool
+var outFileOpt string
 
 func init() {
-	rootCmd.Flags().Int64VarP(&increment, "increment", "i", 1, "Specify increment Value")
-	rootCmd.Flags().BoolVarP(&decrement, "decrement", "d", false, "Decrement instead of incrementing.")
-	rootCmd.Flags().IntVarP(&firstLine, "first-line", "f", 1, "Specify first line number (inclusive), defaults to start of file.")
-	rootCmd.Flags().IntVarP(&lastLine, "last-line", "l", -1, "Specify last line number (inclusive), defaults to end of file.")
-	rootCmd.Flags().BoolVarP(&dryRun, "dry-run", "n", false, "Write result to stdout without overwriting input file.")
-	rootCmd.Flags().StringVarP(&outFile, "output", "o", "", "Output file. Defaults to overwriting input file. A backup will be created either way.")
+	rootCmd.Flags().Int64VarP(&incrementOpt, "increment", "i", 1, "Specify increment Value")
+	rootCmd.Flags().BoolVarP(&decrementOpt, "decrement", "d", false, "Decrement instead of incrementing.")
+	rootCmd.Flags().IntVarP(&firstLineOpt, "first-line", "f", 1, "Specify first line number (inclusive), defaults to start of file.")
+	rootCmd.Flags().IntVarP(&lastLineOpt, "last-line", "l", -1, "Specify last line number (inclusive), defaults to end of file.")
+	rootCmd.Flags().BoolVarP(&dryRunOpt, "dry-run", "n", false, "Write result to stdout without overwriting input file.")
+	rootCmd.Flags().StringVarP(&outFileOpt, "output", "o", "", "Output file. Defaults to overwriting input file. A backup will be created either way.")
 }
 
 func Execute() {
