@@ -9,15 +9,6 @@ import (
 	"strings"
 )
 
-//newContent := assembleFile(lines, increment, firstLine, 200)
-//return nil
-
-//err := ioutil.WriteFile("violin_solo_1_processed.ily", newContent, 0644)
-//if err != nil {
-//  log.Fatal(err)
-//}
-//}
-
 // Function readLilypondFile reads the input lilypond file and returns the lines
 func ReadLilypondFile(path string) ([]string, error) {
 	content, err := ioutil.ReadFile(path)
@@ -76,14 +67,13 @@ func AssembleFile(lines []string, increment int64, firstLine int, lastLine int) 
 		return nil, fmt.Errorf("Error: Last line (%d) is beyond end of file. (%d)", lastLine, len(lines))
 	}
 	var newLines []string
-	i := 1
-	for _, line := range lines {
-		if i >= firstLine && i <= lastLine {
+	for i, line := range lines {
+		lineNum := i + 1
+		if lineNum >= firstLine && lineNum <= lastLine {
 			newLines = append(newLines, IncrementBarNum(line, increment))
 		} else {
 			newLines = append(newLines, line)
 		}
-		i += 1
 	}
 	newLinesStream := strings.Join(newLines, "\n")
 	return []byte(newLinesStream), nil
