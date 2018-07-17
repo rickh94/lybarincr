@@ -7,13 +7,16 @@ GOGET=$(GOCMD) get
 BINARY_NAME=lybarincr
 BINARY_UNIX=$(BINARY_NAME)_unix
 
-all: deps test build
+all: deps test build cov
 
 build:
 	$(GOBUILD) -o $(BINARY_NAME) -v
 
 test:
 	$(GOTEST) -v ./...
+
+cov:
+	./go.test.sh
 
 clean:
 	$(GOCLEAN)

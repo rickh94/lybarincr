@@ -6,3 +6,5 @@ go:
   - "1.10.x"
   - master
 
+after_sucess:
+  - bash < (curl -s https://codecov.io/bash)
