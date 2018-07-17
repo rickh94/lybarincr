@@ -27,7 +27,7 @@ func TestReadLilypondFile(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer os.Remove("../testdata/testfile1.dat.bak")
+	defer os.Remove("testdata/testfile1.dat.bak")
 	// tests
 	testFiles := []struct {
 		path          string
@@ -36,7 +36,7 @@ func TestReadLilypondFile(t *testing.T) {
 		name          string
 	}{
 		{
-			"../testdata/testfile1.dat",
+			"testdata/testfile1.dat",
 			[]string{
 				"this is a test",
 				"this is another line",
@@ -323,9 +323,9 @@ func TestDoEverything(t *testing.T) {
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Could not write temporary file for testing, %s", err))
 	}
-	ProcessFile(2, true, 21, 150, false, tmpFile, []string{"../testdata/testInFile.ily"})
-	defer os.Remove("../testdata/testInFile.ily.bak")
-	expectedContent, err := ioutil.ReadFile("../testdata/testOutFile.ily")
+	ProcessFile(2, true, 21, 150, false, tmpFile, []string{"testdata/testInFile.ily"})
+	defer os.Remove("testdata/testInFile.ily.bak")
+	expectedContent, err := ioutil.ReadFile("testdata/testOutFile.ily")
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Could not open test data: %s", err))
 	}
