@@ -2,7 +2,7 @@
 package main
 
 import (
-	"./cmd"
+	"github.com/rickh94/lybarincr/cmd"
 )
 
 func main() {
