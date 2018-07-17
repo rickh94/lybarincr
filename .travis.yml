@@ -6,5 +6,8 @@ go:
   - "1.10.x"
   - master
 
+scripts:
+  - make travis
+
 after_sucess:
   - bash < (curl -s https://codecov.io/bash)

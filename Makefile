@@ -7,7 +7,9 @@ GOGET=$(GOCMD) get
 BINARY_NAME=lybarincr
 BINARY_UNIX=$(BINARY_NAME)_unix
 
-all: deps test build cov
+all: deps test build
+
+travis: deps test build cov
 
 build:
 	$(GOBUILD) -o $(BINARY_NAME) -v
