@@ -1,5 +1,9 @@
 language: go
 
+os:
+  - linux
+  - osx
+
 go:
   - "1.x"
   - "1.8"
@@ -9,5 +13,5 @@ go:
 script:
   - make travis
 
-after_sucess:
+after_success:
   - bash < (curl -s https://codecov.io/bash)
