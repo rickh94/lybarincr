@@ -18,7 +18,7 @@ test:
 	$(GOTEST) -v ./...
 
 cov:
-	$(GOTEST) -race -coverprofile=coverage.txt -covermode=atomic
+	$(GOTEST) -race -coverprofile=coverage.txt -covermode=atomic ./...
 
 clean:
 	$(GOCLEAN)
