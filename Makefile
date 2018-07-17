@@ -18,7 +18,7 @@ test:
 	$(GOTEST) -v ./...
 
 cov:
-	./go.test.sh
+	$(GOTEST) -race -coverprofile=coverage.txt -covermode=atomic
 
 clean:
 	$(GOCLEAN)
