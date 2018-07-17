@@ -6,7 +6,7 @@ go:
   - "1.10.x"
   - master
 
-scripts:
+script:
   - make travis
 
 after_sucess:
