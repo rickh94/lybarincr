@@ -1,4 +1,4 @@
-# ly-bar-incr
+# lybarincr
 
 ![build status](https://travis-ci.org/rickh94/lybarincr.svg?branch=master)
 Simple script to increment bar numbers in comments and number checks in lilypond files.
